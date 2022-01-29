@@ -1,5 +1,5 @@
 # elf_parser
-A minimal no_std ELF (32/64) parser.
+A minimal no_std library for parsing ELF (32/64).
 [Documentation](https://docs.rs/elf_parser/0.1.1/elf_parser/)
 
 ## Example Usage
@@ -13,8 +13,7 @@ fn main() {
     dbg!(ehdr);
      
     let phdr_iter = elf64.phdr_iter();
-    for phdr_res in phdr_iter {
-        let phdr = phdr_res.unwrap();        
+    for phdr in phdr_iter {      
         dbg!(phdr);
     }
 }
