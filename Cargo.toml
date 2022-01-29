@@ -6,6 +6,8 @@ authors = ["Shu Anzai"]
 description = "A minimal no_std ELF (32/64) parser."
 readme = "README.md"
 categories = ["no_std"]
+repository = "https://github.com/gedatsu217/elf_parser"
+license = "MIT OR Apache-2.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
