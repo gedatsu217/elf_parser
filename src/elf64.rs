@@ -27,8 +27,8 @@ pub struct Elf64Ehdr {
     pub e_shstrndx: u16,
 }
 
-impl Elf64Ehdr {
-    fn new(bytes: &'static [u8]) -> Result<Self, Error> {
+impl<'a> Elf64Ehdr {
+    fn new(bytes: &'a [u8]) -> Result<Self, Error> {
         let e_ident = bytes[0..16].try_into().unwrap();
         let e_type = util::bytes_to_u16(&bytes[16..18])?;
         let e_machine = util::bytes_to_u16(&bytes[18..20])?;
@@ -110,8 +110,8 @@ pub struct Elf64Phdr {
     pub p_align: u64,
 }
 
-impl Elf64Phdr {
-    fn new(bytes: &'static [u8], offset: u64) -> Result<Self, Error> {
+impl<'a> Elf64Phdr {
+    fn new(bytes: &'a [u8], offset: u64) -> Result<Self, Error> {
         let offset_bytes = &bytes[offset as usize..];
         let p_type = util::bytes_to_u32(&offset_bytes[0..4])?;
         let p_flags = util::bytes_to_u32(&offset_bytes[4..8])?;
@@ -174,8 +174,8 @@ pub struct Elf64Shdr {
     pub sh_entsize: u64,
 }
 
-impl Elf64Shdr {
-    fn new(bytes: &'static [u8], offset: u64) -> Result<Self, Error> {
+impl<'a> Elf64Shdr {
+    fn new(bytes: &'a [u8], offset: u64) -> Result<Self, Error> {
         let offset_bytes = &bytes[offset as usize..];
         let sh_name = util::bytes_to_u32(&offset_bytes[0..4])?;
         let sh_type = util::bytes_to_u32(&offset_bytes[4..8])?;
@@ -231,14 +231,14 @@ impl fmt::Debug for Elf64Shdr {
     }
 }
 
-pub struct Elf64 {
-    bytes: &'static [u8],
+pub struct Elf64<'a> {
+    bytes: &'a [u8],
     ehdr: Elf64Ehdr,
 }
 
-impl Elf64 {
+impl<'a> Elf64<'_> {
     /// Get a Elf64 struct from bytes.
-    pub fn from_bytes(bytes: &'static [u8]) -> Result<Elf64, Error> {
+    pub fn from_bytes(bytes: &'a [u8]) -> Result<Elf64, Error> {
         if !bytes.starts_with(&MAGIC_NUM) {
             return Err(Error::InvalidMagicNumber);
         }
@@ -324,7 +324,7 @@ impl Elf64 {
 
 pub struct Elf64PhdrIter<'a> {
     index: u16,
-    elf64: &'a Elf64,
+    elf64: &'a Elf64<'a>,
 }
 
 impl Iterator for Elf64PhdrIter<'_> {
@@ -343,7 +343,7 @@ impl Iterator for Elf64PhdrIter<'_> {
 
 pub struct Elf64ShdrIter<'a> {
     index: u16,
-    elf64: &'a Elf64,
+    elf64: &'a Elf64<'a>,
 }
 
 impl Iterator for Elf64ShdrIter<'_> {
