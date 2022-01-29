@@ -5,7 +5,7 @@ use crate::{
     },
     util, Error,
 };
-use core::fmt;
+use core::{fmt, mem};
 
 #[repr(C)]
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -28,22 +28,22 @@ pub struct Elf32Ehdr {
 }
 
 impl<'a> Elf32Ehdr {
-    fn new(bytes: &'a [u8]) -> Result<Self, Error> {
+    fn new(bytes: &'a [u8]) -> Self {
         let e_ident = bytes[0..16].try_into().unwrap();
-        let e_type = util::bytes_to_u16(&bytes[16..18])?;
-        let e_machine = util::bytes_to_u16(&bytes[18..20])?;
-        let e_version = util::bytes_to_u32(&bytes[20..24])?;
-        let e_entry = util::bytes_to_u32(&bytes[24..28])?;
-        let e_phoff = util::bytes_to_u32(&bytes[28..32])?;
-        let e_shoff = util::bytes_to_u32(&bytes[32..36])?;
-        let e_flags = util::bytes_to_u32(&bytes[36..40])?;
-        let e_ehsize = util::bytes_to_u16(&bytes[40..42])?;
-        let e_phentsize = util::bytes_to_u16(&bytes[42..44])?;
-        let e_phnum = util::bytes_to_u16(&bytes[44..46])?;
-        let e_shentsize = util::bytes_to_u16(&bytes[46..48])?;
-        let e_shnum = util::bytes_to_u16(&bytes[48..50])?;
-        let e_shstrndx = util::bytes_to_u16(&bytes[50..52])?;
-        Ok(Elf32Ehdr {
+        let e_type = util::bytes_to_u16(&bytes[16..18]);
+        let e_machine = util::bytes_to_u16(&bytes[18..20]);
+        let e_version = util::bytes_to_u32(&bytes[20..24]);
+        let e_entry = util::bytes_to_u32(&bytes[24..28]);
+        let e_phoff = util::bytes_to_u32(&bytes[28..32]);
+        let e_shoff = util::bytes_to_u32(&bytes[32..36]);
+        let e_flags = util::bytes_to_u32(&bytes[36..40]);
+        let e_ehsize = util::bytes_to_u16(&bytes[40..42]);
+        let e_phentsize = util::bytes_to_u16(&bytes[42..44]);
+        let e_phnum = util::bytes_to_u16(&bytes[44..46]);
+        let e_shentsize = util::bytes_to_u16(&bytes[46..48]);
+        let e_shnum = util::bytes_to_u16(&bytes[48..50]);
+        let e_shstrndx = util::bytes_to_u16(&bytes[50..52]);
+        Elf32Ehdr {
             e_ident,
             e_type,
             e_machine,
@@ -58,7 +58,7 @@ impl<'a> Elf32Ehdr {
             e_shentsize,
             e_shnum,
             e_shstrndx,
-        })
+        }
     }
 }
 
@@ -111,17 +111,17 @@ pub struct Elf32Phdr {
 }
 
 impl<'a> Elf32Phdr {
-    fn new(bytes: &'a [u8], offset: u64) -> Result<Self, Error> {
+    fn new(bytes: &'a [u8], offset: u32) -> Self {
         let offset_bytes = &bytes[offset as usize..];
-        let p_type = util::bytes_to_u32(&offset_bytes[0..4])?;
-        let p_offset = util::bytes_to_u32(&offset_bytes[4..8])?;
-        let p_vaddr = util::bytes_to_u32(&offset_bytes[8..12])?;
-        let p_paddr = util::bytes_to_u32(&offset_bytes[12..16])?;
-        let p_filesz = util::bytes_to_u32(&offset_bytes[16..20])?;
-        let p_memsz = util::bytes_to_u32(&offset_bytes[20..24])?;
-        let p_flags = util::bytes_to_u32(&offset_bytes[24..28])?;
-        let p_align = util::bytes_to_u32(&offset_bytes[28..32])?;
-        Ok(Elf32Phdr {
+        let p_type = util::bytes_to_u32(&offset_bytes[0..4]);
+        let p_offset = util::bytes_to_u32(&offset_bytes[4..8]);
+        let p_vaddr = util::bytes_to_u32(&offset_bytes[8..12]);
+        let p_paddr = util::bytes_to_u32(&offset_bytes[12..16]);
+        let p_filesz = util::bytes_to_u32(&offset_bytes[16..20]);
+        let p_memsz = util::bytes_to_u32(&offset_bytes[20..24]);
+        let p_flags = util::bytes_to_u32(&offset_bytes[24..28]);
+        let p_align = util::bytes_to_u32(&offset_bytes[28..32]);
+        Elf32Phdr {
             p_type,
             p_offset,
             p_vaddr,
@@ -130,7 +130,7 @@ impl<'a> Elf32Phdr {
             p_memsz,
             p_flags,
             p_align,
-        })
+        }
     }
 }
 
@@ -175,20 +175,20 @@ pub struct Elf32Shdr {
 }
 
 impl<'a> Elf32Shdr {
-    fn new(bytes: &'a [u8], offset: u64) -> Result<Self, Error> {
+    fn new(bytes: &'a [u8], offset: u32) -> Self {
         let offset_bytes = &bytes[offset as usize..];
-        let sh_name = util::bytes_to_u32(&offset_bytes[0..4])?;
-        let sh_type = util::bytes_to_u32(&offset_bytes[4..8])?;
-        let sh_flags = util::bytes_to_u32(&offset_bytes[8..12])?;
-        let sh_addr = util::bytes_to_u32(&offset_bytes[12..16])?;
-        let sh_offset = util::bytes_to_u32(&offset_bytes[16..20])?;
-        let sh_size = util::bytes_to_u32(&offset_bytes[20..24])?;
-        let sh_link = util::bytes_to_u32(&offset_bytes[24..28])?;
-        let sh_info = util::bytes_to_u32(&offset_bytes[28..32])?;
-        let sh_addralign = util::bytes_to_u32(&offset_bytes[32..36])?;
-        let sh_entsize = util::bytes_to_u32(&offset_bytes[36..40])?;
+        let sh_name = util::bytes_to_u32(&offset_bytes[0..4]);
+        let sh_type = util::bytes_to_u32(&offset_bytes[4..8]);
+        let sh_flags = util::bytes_to_u32(&offset_bytes[8..12]);
+        let sh_addr = util::bytes_to_u32(&offset_bytes[12..16]);
+        let sh_offset = util::bytes_to_u32(&offset_bytes[16..20]);
+        let sh_size = util::bytes_to_u32(&offset_bytes[20..24]);
+        let sh_link = util::bytes_to_u32(&offset_bytes[24..28]);
+        let sh_info = util::bytes_to_u32(&offset_bytes[28..32]);
+        let sh_addralign = util::bytes_to_u32(&offset_bytes[32..36]);
+        let sh_entsize = util::bytes_to_u32(&offset_bytes[36..40]);
 
-        Ok(Elf32Shdr {
+        Elf32Shdr {
             sh_name,
             sh_type,
             sh_flags,
@@ -199,7 +199,7 @@ impl<'a> Elf32Shdr {
             sh_info,
             sh_addralign,
             sh_entsize,
-        })
+        }
     }
 }
 
@@ -237,25 +237,32 @@ pub struct Elf32<'a> {
 }
 
 impl<'a> Elf32<'_> {
-    /// Get a Elf32 struct from bytes.
+    /// Get a Result<Elf32 struct, Error> from bytes.
     pub fn from_bytes(bytes: &'a [u8]) -> Result<Elf32, Error> {
+        let length = bytes.len();
+
         if !bytes.starts_with(&MAGIC_NUM) {
             return Err(Error::InvalidMagicNumber);
+        }
+
+        if length < mem::size_of::<Elf32Ehdr>() {
+            return Err(Error::Corrupted);
         }
 
         if Class(bytes[4] as u8) != ELFCLASS32 {
             return Err(Error::InvalidClass);
         }
 
-        let ehdr = match Elf32Ehdr::new(bytes) {
-            Ok(elf32) => elf32,
-            Err(error) => return Err(error),
-        };
+        let ehdr = Elf32Ehdr::new(bytes);
+
+        if !phdr_shdr_check(&ehdr, length) {
+            return Err(Error::Corrupted);
+        }
 
         Ok(Elf32 { bytes, ehdr })
     }
 
-    /// Get a ELF header.
+    /// Get a ELF header reference.
     pub fn ehdr(&self) -> &Elf32Ehdr {
         &self.ehdr
     }
@@ -270,17 +277,27 @@ impl<'a> Elf32<'_> {
         self.ehdr.e_phnum
     }
 
-    /// Get a nth program header.
+    /// Get a Result<nth program header, Error>.
     pub fn phdr_nth(&self, index: u16) -> Result<Elf32Phdr, Error> {
         let e_phoff = self.ehdr.e_phoff;
         let e_phentsize = self.ehdr.e_phentsize;
         let e_phnum = self.ehdr.e_phnum;
 
-        let offset = e_phoff as u64 + index as u64 * e_phentsize as u64;
+        let offset = e_phoff + index as u32 * e_phentsize as u32;
 
         if index >= e_phnum {
             return Err(Error::InvalidIndex);
         }
+
+        Ok(Elf32Phdr::new(self.bytes, offset))
+    }
+
+    /// Get a nth program header, but not check bounds.
+    pub fn phdr_nth_uncheck(&self, index: u16) -> Elf32Phdr {
+        let e_phoff = self.ehdr.e_phoff;
+        let e_phentsize = self.ehdr.e_phentsize;
+
+        let offset = e_phoff + index as u32 * e_phentsize as u32;
 
         Elf32Phdr::new(self.bytes, offset)
     }
@@ -298,17 +315,27 @@ impl<'a> Elf32<'_> {
         self.ehdr.e_shnum
     }
 
-    /// Get a nth section header.
+    /// Get a Result<nth section header, Error>.
     pub fn shdr_nth(&self, index: u16) -> Result<Elf32Shdr, Error> {
         let e_shoff = self.ehdr.e_shoff;
         let e_shentsize = self.ehdr.e_shentsize;
         let e_shnum = self.ehdr.e_shnum;
 
-        let offset = e_shoff as u64 + index as u64 * e_shentsize as u64;
+        let offset = e_shoff + index as u32 * e_shentsize as u32;
 
         if index >= e_shnum {
             return Err(Error::InvalidIndex);
         }
+
+        Ok(Elf32Shdr::new(self.bytes, offset))
+    }
+
+    /// Get a nth section header, but not check bounds.
+    pub fn shdr_nth_uncheck(&self, index: u16) -> Elf32Shdr {
+        let e_shoff = self.ehdr.e_shoff;
+        let e_shentsize = self.ehdr.e_shentsize;
+
+        let offset = e_shoff + index as u32 * e_shentsize as u32;
 
         Elf32Shdr::new(self.bytes, offset)
     }
@@ -320,6 +347,25 @@ impl<'a> Elf32<'_> {
             elf32: self,
         }
     }
+}
+
+fn phdr_shdr_check<'a>(ehdr: &Elf32Ehdr, length: usize) -> bool {
+    let phnum = ehdr.e_phnum;
+    let phoff = ehdr.e_phoff;
+    let phsize = ehdr.e_phentsize;
+    let phdr_end = phoff + phsize as u32 * phnum as u32;
+    if phdr_end > length as u32 {
+        return false;
+    }
+
+    let shnum = ehdr.e_shnum;
+    let shoff = ehdr.e_shoff;
+    let shsize = ehdr.e_shentsize;
+    let shdr_end = shoff + shsize as u32 * shnum as u32;
+    if shdr_end as usize > length {
+        return false;
+    }
+    true
 }
 
 pub struct Elf32PhdrIter<'a> {

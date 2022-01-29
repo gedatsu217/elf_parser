@@ -9,7 +9,7 @@ fn elf64_phdr() {
     let phdr_iter = elf64.phdr_iter();
     assert_eq!(elf64.phdr_num(), ehdr.e_phnum);
     for (i, phdr) in phdr_iter.enumerate() {
-        assert_eq!(elf64.phdr_nth(i as u16).unwrap(), phdr.unwrap());
+        assert_eq!(elf64.phdr_nth(i as u16).unwrap(), phdr);
     }
     let phdr0 = elf64.phdr_nth(0).unwrap();
     assert_eq!(phdr0.p_type, 0x6);

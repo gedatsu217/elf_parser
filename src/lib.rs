@@ -11,8 +11,7 @@
 //!     dbg!(ehdr);
 //!     
 //!     let phdr_iter = elf64.phdr_iter();
-//!     for phdr_res in phdr_iter {
-//!         let phdr = phdr_res.unwrap();        
+//!     for phdr in phdr_iter {     
 //!         dbg!(phdr);
 //!     }
 //! }
@@ -32,21 +31,21 @@ pub use elf64::{Elf64, Elf64Ehdr, Elf64Phdr, Elf64Shdr};
 pub enum Error {
     /// Magic numbers is not [0x7f, b'E', b'L', b'F'].
     InvalidMagicNumber,
-    /// Failed to convert bytes. Probably, the ELF file is corrupted.
-    InvalidConversion,
     /// Out-of-bounds access to a page/section header table.
     InvalidIndex,
     /// The ELF file is loadead as a ELF32 although it is ELF64, and vice versa.
     InvalidClass,
+    /// Failed to get header info. Probably, the file includes invalid value.
+    Corrupted,
 }
 
 impl fmt::Debug for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
             Error::InvalidMagicNumber => "InvalidMagicNumber",
-            Error::InvalidConversion => "InvalidConversion",
             Error::InvalidIndex => "InvalidIndex",
             Error::InvalidClass => "InvalidClass",
+            Error::Corrupted => "Corrupted",
         };
         f.write_fmt(format_args!("{}", name))
     }

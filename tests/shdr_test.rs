@@ -9,7 +9,7 @@ fn elf64_shdr() {
     let shdr_iter = elf64.shdr_iter();
     assert_eq!(elf64.shdr_num(), ehdr.e_shnum);
     for (i, shdr) in shdr_iter.enumerate() {
-        assert_eq!(elf64.shdr_nth(i as u16).unwrap(), shdr.unwrap());
+        assert_eq!(elf64.shdr_nth(i as u16).unwrap(), shdr);
     }
     let shdr1 = elf64.shdr_nth(1).unwrap();
     assert_eq!(shdr1.sh_name, 0x1b);
