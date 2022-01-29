@@ -5,7 +5,7 @@ edition = "2021"
 authors = ["Shu Anzai <shu.anzai@gmail.com>"]
 description = "A minimal no_std ELF (32/64) parser."
 readme = "README.md"
-categories = ["no_std"]
+categories = ["no-std", "parsing"]
 repository = "https://github.com/gedatsu217/elf_parser"
 license = "MIT OR Apache-2.0"
 
