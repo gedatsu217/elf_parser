@@ -2,7 +2,7 @@
 name = "elf_parser"
 version = "0.1.0"
 edition = "2021"
-authors = ["Shu Anzai <shu.anzai@gmail.com>"]
+authors = ["Shu Anzai"]
 description = "A minimal no_std ELF (32/64) parser."
 readme = "README.md"
 categories = ["no_std"]
