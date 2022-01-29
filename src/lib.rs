@@ -7,10 +7,10 @@
 //! fn main() {
 //!     let bytes = include_bytes!("path/to/elf_file");
 //!     let elf64 = Elf64::from_bytes(bytes).unwrap();
-//!     let ehdr = elf64.get_ehdr();
+//!     let ehdr = elf64.ehdr();
 //!     dbg!(ehdr);
 //!     
-//!     let phdr_iter = elf64.get_phdr_iter();
+//!     let phdr_iter = elf64.phdr_iter();
 //!     for phdr_res in phdr_iter {
 //!         let phdr = phdr_res.unwrap();        
 //!         dbg!(phdr);
