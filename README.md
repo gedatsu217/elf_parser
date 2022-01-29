@@ -1,5 +1,6 @@
 # elf_parser
 A minimal no_std ELF (32/64) parser.
+[Documentation](https://docs.rs/elf_parser/0.1.1/elf_parser/)
 
 ## Example Usage
 ```
