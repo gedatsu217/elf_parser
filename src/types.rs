@@ -3,7 +3,6 @@ use core::fmt;
 pub const EI_NIDENT: usize = 16;
 pub const MAGIC_NUM: [u8; 4] = [0x7f, b'E', b'L', b'F'];
 
-
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub struct FileType(pub u16);
 pub const ET_NONE: FileType = FileType(0);
@@ -24,11 +23,9 @@ impl fmt::Debug for FileType {
             4 => "ET_CORE",
             0xff00 => "ET_LOPROC",
             0xffff => "ET_HIPROC",
-            _ => "UNKNOWN"
+            _ => "UNKNOWN",
         };
-        f.write_fmt(format_args!(
-            "{}", name
-        ))
+        f.write_fmt(format_args!("{}", name))
     }
 }
 
@@ -55,7 +52,7 @@ pub const EM_SH: Machine = Machine(42);
 pub const EM_SPARCV9: Machine = Machine(43);
 pub const EM_H8_300: Machine = Machine(46);
 pub const EM_IA_64: Machine = Machine(50);
-pub const EM_X86_64: Machine = Machine(62);	
+pub const EM_X86_64: Machine = Machine(62);
 pub const EM_S390: Machine = Machine(22);
 pub const EM_CRIS: Machine = Machine(76);
 pub const EM_M32R: Machine = Machine(88);
@@ -69,14 +66,14 @@ pub const EM_ALTERA_NIOS2: Machine = Machine(113);
 pub const EM_TI_C6000: Machine = Machine(140);
 pub const EM_HEXAGON: Machine = Machine(164);
 pub const EM_NDS32: Machine = Machine(167);
-pub const EM_AARCH64: Machine = Machine(183);	
+pub const EM_AARCH64: Machine = Machine(183);
 pub const EM_TILEPRO: Machine = Machine(188);
 pub const EM_MICROBLAZE: Machine = Machine(189);
 pub const EM_TILEGX: Machine = Machine(191);
 pub const EM_ARCV2: Machine = Machine(195);
 pub const EM_RISCV: Machine = Machine(243);
 pub const EM_BPF: Machine = Machine(247);
-pub const EM_CSKY: Machine = Machine(252);	
+pub const EM_CSKY: Machine = Machine(252);
 pub const EM_FRV: Machine = Machine(0x5441);
 pub const EM_ALPHA: Machine = Machine(0x9026);
 pub const EM_CYGNUS_M32R: Machine = Machine(0x9041);
@@ -133,11 +130,9 @@ impl fmt::Debug for Machine {
             0x9041 => "EM_CYGNUS_M32R",
             0xA390 => "EM_S390_OLD",
             0xbeef => "EM_CYGNUS_MN10300",
-            _ => "UNKNOWN"
+            _ => "UNKNOWN",
         };
-        f.write_fmt(format_args!(
-            "{}", name
-        ))
+        f.write_fmt(format_args!("{}", name))
     }
 }
 
@@ -145,7 +140,7 @@ impl fmt::Debug for Machine {
 pub struct FileVersion(pub u32);
 pub const EV_NONE: FileVersion = FileVersion(0);
 pub const EV_CURRENT: FileVersion = FileVersion(1);
-pub const EV_NUM : FileVersion = FileVersion(2);
+pub const EV_NUM: FileVersion = FileVersion(2);
 
 impl fmt::Debug for FileVersion {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -153,11 +148,9 @@ impl fmt::Debug for FileVersion {
             0 => "EV_NONE",
             1 => "EV_CURRENT",
             2 => "EV_NUM",
-            _ => "UNKNOWN"
+            _ => "UNKNOWN",
         };
-        f.write_fmt(format_args!(
-            "{}", name
-        ))
+        f.write_fmt(format_args!("{}", name))
     }
 }
 
@@ -167,7 +160,6 @@ pub struct Class(pub u8);
 pub const ELFCLASSNONE: Class = Class(0);
 pub const ELFCLASS32: Class = Class(1);
 pub const ELFCLASS64: Class = Class(2);
-
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub struct PType(pub u32);
@@ -205,11 +197,9 @@ impl fmt::Debug for PType {
             0x6474e550 => "PT_GNU_EH_FRAME",
             0x6474e553 => "PT_GNU_PROPERTY",
             0x6474e551 => "PT_GNU_STACK",
-            _ => "UNKNOWN"
+            _ => "UNKNOWN",
         };
-        f.write_fmt(format_args!(
-            "{}", name
-        ))
+        f.write_fmt(format_args!("{}", name))
     }
 }
 
@@ -227,11 +217,9 @@ impl fmt::Debug for PFlag {
             5 => "R X",
             6 => "RW",
             7 => "RWX",
-            _ => "INVALID"
+            _ => "INVALID",
         };
-        f.write_fmt(format_args!(
-            "{}", name
-        ))
+        f.write_fmt(format_args!("{}", name))
     }
 }
 
@@ -278,9 +266,7 @@ impl fmt::Debug for ShType {
             0xffffffff => "SHT_HIUSER",
             _ => "UNKNOWN",
         };
-        f.write_fmt(format_args!(
-            "{}", name
-        ))
+        f.write_fmt(format_args!("{}", name))
     }
 }
 
@@ -296,14 +282,31 @@ pub const SHF_MASKPROC: ShFlag = ShFlag(0xf0000000);
 
 impl fmt::Debug for ShFlag {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let write = if self.0 & 0x1 != 0 {"SHF_WRITE "} else {""};
-        let alloc = if self.0 & 0x2 != 0 {"SHF_ALLOC "} else {""};
-        let execinstr = if self.0 & 0x4 != 0 {"SHF_EXECINSTR "} else {""};
-        let rela = if self.0 & 0x00100000 != 0 {"SHF_RELA_LIVEPATCH "} else {""};
-        let ro = if self.0 & 0x00200000 != 0 {"SHF_RO_AFTER_INIT "} else {""};
-        let maskproc = if self.0 & 0xf0000000 != 0 {"SHF_MASKPROC "} else {""};
+        let write = if self.0 & 0x1 != 0 { "SHF_WRITE " } else { "" };
+        let alloc = if self.0 & 0x2 != 0 { "SHF_ALLOC " } else { "" };
+        let execinstr = if self.0 & 0x4 != 0 {
+            "SHF_EXECINSTR "
+        } else {
+            ""
+        };
+        let rela = if self.0 & 0x00100000 != 0 {
+            "SHF_RELA_LIVEPATCH "
+        } else {
+            ""
+        };
+        let ro = if self.0 & 0x00200000 != 0 {
+            "SHF_RO_AFTER_INIT "
+        } else {
+            ""
+        };
+        let maskproc = if self.0 & 0xf0000000 != 0 {
+            "SHF_MASKPROC "
+        } else {
+            ""
+        };
         f.write_fmt(format_args!(
-            "{}{}{}{}{}{}", write, alloc, execinstr, rela, ro, maskproc
+            "{}{}{}{}{}{}",
+            write, alloc, execinstr, rela, ro, maskproc
         ))
     }
 }

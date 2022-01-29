@@ -1,9 +1,9 @@
-//! A minimal no_std ELF (32/64) parser. 
+//! A minimal no_std ELF (32/64) parser.
 //!
 //! ## Example Usage
 //! ```ignore
 //! use elf_parser::Elf64;
-//! 
+//!
 //! fn main() {
 //!     let bytes = include_bytes!("path/to/elf_file");
 //!     let elf64 = Elf64::from_bytes(bytes).unwrap();
@@ -20,13 +20,13 @@
 #![no_std]
 use core::fmt;
 
-mod util;
 pub mod elf32;
 pub mod elf64;
 pub mod types;
+mod util;
 
-pub use elf64::{Elf64, Elf64Ehdr, Elf64Phdr, Elf64Shdr};
 pub use elf32::{Elf32, Elf32Ehdr, Elf32Phdr, Elf32Shdr};
+pub use elf64::{Elf64, Elf64Ehdr, Elf64Phdr, Elf64Shdr};
 
 #[derive(Copy, Clone, PartialEq, Eq)]
 pub enum Error {
@@ -48,8 +48,6 @@ impl fmt::Debug for Error {
             Error::InvalidIndex => "InvalidIndex",
             Error::InvalidClass => "InvalidClass",
         };
-        f.write_fmt(format_args!(
-            "{}", name
-        ))
+        f.write_fmt(format_args!("{}", name))
     }
 }

@@ -1,4 +1,10 @@
-use crate::{util, Error, types::{FileType, Machine, FileVersion, PType, PFlag, ShType, ShFlag, Class, EI_NIDENT, MAGIC_NUM, ELFCLASS64}};
+use crate::{
+    types::{
+        Class, FileType, FileVersion, Machine, PFlag, PType, ShFlag, ShType, EI_NIDENT, ELFCLASS64,
+        MAGIC_NUM,
+    },
+    util, Error,
+};
 use core::fmt;
 
 #[repr(C)]
@@ -51,7 +57,7 @@ impl Elf64Ehdr {
             e_phnum,
             e_shentsize,
             e_shnum,
-            e_shstrndx
+            e_shstrndx,
         })
     }
 }
@@ -73,7 +79,19 @@ impl fmt::Debug for Elf64Ehdr {
     shentsize: {:#x}
     shnum: {:#x}
     shstrndx: {:#x}",
-                FileType(self.e_type), Machine(self.e_machine), FileVersion(self.e_version), self.e_entry, self.e_phoff, self.e_shoff, self.e_flags, self.e_ehsize, self.e_phentsize, self.e_phnum, self.e_shentsize, self.e_shnum, self.e_shstrndx
+            FileType(self.e_type),
+            Machine(self.e_machine),
+            FileVersion(self.e_version),
+            self.e_entry,
+            self.e_phoff,
+            self.e_shoff,
+            self.e_flags,
+            self.e_ehsize,
+            self.e_phentsize,
+            self.e_phnum,
+            self.e_shentsize,
+            self.e_shnum,
+            self.e_shstrndx
         ))
     }
 }
@@ -103,7 +121,7 @@ impl Elf64Phdr {
         let p_filesz = util::bytes_to_u64(&offset_bytes[32..40])?;
         let p_memsz = util::bytes_to_u64(&offset_bytes[40..48])?;
         let p_align = util::bytes_to_u64(&offset_bytes[48..56])?;
-        Ok(Elf64Phdr{
+        Ok(Elf64Phdr {
             p_type,
             p_flags,
             p_offset,
@@ -128,7 +146,14 @@ impl fmt::Debug for Elf64Phdr {
     filesz: {:#x}
     memsz: {:#x}
     align: {:#x}",
-            PType(self.p_type), PFlag(self.p_flags), self.p_offset, self.p_vaddr, self.p_paddr, self.p_filesz, self.p_memsz, self.p_align
+            PType(self.p_type),
+            PFlag(self.p_flags),
+            self.p_offset,
+            self.p_vaddr,
+            self.p_paddr,
+            self.p_filesz,
+            self.p_memsz,
+            self.p_align
         ))
     }
 }
@@ -192,7 +217,16 @@ impl fmt::Debug for Elf64Shdr {
     info: {:#x}
     addralign: {:#x}
     entsize: {:#x}",
-            self.sh_name, ShType(self.sh_type), ShFlag(self.sh_flags), self.sh_addr, self.sh_offset, self.sh_size, self.sh_link, self.sh_info, self.sh_addralign, self.sh_entsize
+            self.sh_name,
+            ShType(self.sh_type),
+            ShFlag(self.sh_flags),
+            self.sh_addr,
+            self.sh_offset,
+            self.sh_size,
+            self.sh_link,
+            self.sh_info,
+            self.sh_addralign,
+            self.sh_entsize
         ))
     }
 }
@@ -201,7 +235,6 @@ pub struct Elf64 {
     bytes: &'static [u8],
     ehdr: Elf64Ehdr,
 }
-
 
 impl Elf64 {
     /// Get a Elf64 struct from bytes.
@@ -219,7 +252,7 @@ impl Elf64 {
             Err(error) => return Err(error),
         };
 
-        Ok(Elf64{bytes, ehdr})
+        Ok(Elf64 { bytes, ehdr })
     }
 
     /// Get a ELF header.
@@ -254,7 +287,7 @@ impl Elf64 {
 
     /// Get a program header iterator.
     pub fn phdr_iter(&self) -> Elf64PhdrIter {
-        Elf64PhdrIter{
+        Elf64PhdrIter {
             index: 0,
             elf64: self,
         }
@@ -282,7 +315,7 @@ impl Elf64 {
 
     /// Get a section header iterator.
     pub fn shdr_iter(&self) -> Elf64ShdrIter {
-        Elf64ShdrIter{
+        Elf64ShdrIter {
             index: 0,
             elf64: self,
         }

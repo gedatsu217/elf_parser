@@ -1,5 +1,5 @@
 extern crate elf_parser;
-use elf_parser::{Elf64, Elf32};
+use elf_parser::{Elf32, Elf64};
 
 #[test]
 fn elf64_phdr() {

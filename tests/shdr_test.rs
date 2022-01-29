@@ -1,5 +1,5 @@
 extern crate elf_parser;
-use elf_parser::{Elf64, Elf32};
+use elf_parser::{Elf32, Elf64};
 
 #[test]
 fn elf64_shdr() {
@@ -58,7 +58,7 @@ fn elf32_shdr() {
     assert_eq!(shdr10.sh_info, 0x16);
     assert_eq!(shdr10.sh_addralign, 0x4);
     assert_eq!(shdr10.sh_entsize, 0x8);
-    
+
     let shdr11 = elf32.shdr_nth(11).unwrap();
     assert_eq!(shdr11.sh_name, 0x8c);
     assert_eq!(shdr11.sh_type, 0x1);
@@ -70,6 +70,4 @@ fn elf32_shdr() {
     assert_eq!(shdr11.sh_info, 0x0);
     assert_eq!(shdr11.sh_addralign, 0x4);
     assert_eq!(shdr11.sh_entsize, 0x0);
-
-    
 }
